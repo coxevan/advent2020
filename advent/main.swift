@@ -6,4 +6,5 @@
 //
 
 import Foundation
+// put day<Int> here, updated for each day
 day5()
