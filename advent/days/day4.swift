@@ -182,5 +182,6 @@ func day4()->Int?{
             valid_items += 1
         }
     }
-    return valid_items
+    print(valid_items)
+    //return valid_items
 }
