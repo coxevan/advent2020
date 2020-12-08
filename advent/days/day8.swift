@@ -11,35 +11,34 @@ let JMP_TOKEN = "jmp "
 let NOP_TOKEN = "nop "
 
 let TOKENS = [ ACC_TOKEN, JMP_TOKEN, NOP_TOKEN ]
+
 class GameManager{
-    var accumulator    : Int = 0 // When this is 5, we reset the event tracker list
-    var last_operation : String = "" // last valid interaction that did anything to the accum
-    var last_action    : String = ""
+    var accumulator    : Int = 0
     var frame_event    : String = ""
-    var last_line     : Int    = 0
-    var event_array    : Array<String> = []
-    var frame_events    : Array<String> = []
-    var attempted_reset_frame_events : Array<String> = []
+    var frame_events   : Array<String> = []
     var event_action   : String = ""
     var events         : Array<String> = []
-    var frame_array    : Array<Int> = []
+    
+    // when game reset is flagged true, we stop updating the game_state_array.
+    // we use the game state array to track what game states we should try to reset to and flip jmp to nop and nop to jmp
+    var game_reset : Bool = false
     var game_state_array : Array<String> = []
+    // before resetting game states, we check to see if we've already tried resetting the frame event it holds by storing it in and checking against this array
+    var attempted_reset_frame_events : Array<String> = []
+
     
-    var game_state_at_first_reset : Array<String> = []
+    var event_index : Int = 0 // index of the list we're processing (input file line number == +1)
     
-    var line : Int = 0
-    var no_ops : Int = 0
+    var last_operation : String = "" // last valid interaction that did anything to the accum (for debug)
+
     func check_valid_ending() -> Bool{
-        if line == events.count{
+        if event_index == events.count{
             // if we break here, the program ran as expected (tried to run a line one after the last line, no jmp)
             return false
         }
         return true
     }
     func check_duplicate_action() -> Bool{
-        if frame_events.count <= 5{
-            return true
-        }
         if frame_events.contains(frame_event){
             // any action, nop/acc/ or jmp
             return false
@@ -49,24 +48,24 @@ class GameManager{
     
     func run(lines:Array<String>, fix:Bool){
         events = lines
-        line = 0
+        event_index = 0
         while true{
             // Event pre-process
             // before the frame is increased, get the next event to process and make a string out of it to identify it and its index later
             if !check_valid_ending(){
                 break
             }
-            event_action = events[line]
+            event_action = events[event_index]
             if !check_valid_ending(){
                 break
             }
             
-            frame_event = event_action + " \(line)" //"jmp -306 534"
+            frame_event = event_action + " \(event_index)" //"jmp -306 534"
             //we have detected an infinite loop, reset game state to last valid state (last jmp operation)
             if !check_duplicate_action(){
                 if fix{
                     _reset_game_state()
-                    print("Loop detected, resetting to line \(line) with new frame_event \(frame_event)")
+                    print("Loop detected, resetting to line \(event_index) with new frame_event \(frame_event)")
                 }else{
                     break
                 }
@@ -75,21 +74,19 @@ class GameManager{
             
             // Append the frame event after we've processed it so we can recheck again before we process the event.
             frame_events.append(frame_event)
-            game_state_array.append(frame_event + " \(accumulator)") // "jmp -306 534 100" which is a jump action, to -306, line is 534, accum is 100
-            // store the last frame here and the event in the event array so if we need to go backwards we can
-            last_line = line
-            event_array.append(event_action)
-
+            
+            // We haven't reset yet, continue to update the internal game state array
+            if !game_reset{
+                game_state_array.append(frame_event + " \(accumulator)") // "jmp -306 534 100" which is a jump action, to -306, line is 534, accum is 100
+            }
         }
     }
     
     // reset the game state, and set line to the new line, and replace jmp in our new event_action
     func _reset_game_state(){
         // Store the game state when we first hit an infinite loop, we'll iterate through this to try new states.
-        if game_state_at_first_reset.isEmpty{
-            game_state_at_first_reset = game_state_array
-        }
-        for game_state in game_state_at_first_reset.reversed(){
+        game_reset = true
+        for game_state in game_state_array.reversed(){
             if game_state.contains(ACC_TOKEN){
                 // pass on operations that are not jmp or nop
                 continue
@@ -108,8 +105,8 @@ class GameManager{
             
             // Set internal values
             event_action = token + String(split_game_state[1])
-            line = Int(String(split_game_state[2]))!
-            frame_event = event_action + " \(line)" //"jmp -306 534"
+            event_index = Int(String(split_game_state[2]))!
+            frame_event = event_action + " \(event_index)" //"jmp -306 534"
             
             // Check to see if we already tried resetting to this line
             if attempted_reset_frame_events.contains(frame_event){
@@ -122,6 +119,7 @@ class GameManager{
         
         // Reset the frame events list we use to detect infinite loops
         // because we might revisit a line we attempted as part of a modified state, and don't wanna have a false positive
+        // this might make sense to be broken out into its own func for visibility
         var _frame_events = Array<String>()
         for _frame_event in frame_events{
             if _frame_event == frame_event{
@@ -134,8 +132,8 @@ class GameManager{
         frame_event = frame_event.replacingOccurrences(of: JMP_TOKEN, with: NOP_TOKEN)
     }
     func process_event(){
-        // Event debug
-        print(event_action, line, accumulator)
+        // which line should we jump to, and what value to set accumulator to based on frame event
+        print(event_action, event_index, accumulator) //this is a full game state log
 
         let token = String(event_action.prefix(4))
         let raw_action_str = String(event_action.dropFirst(4))
@@ -143,19 +141,19 @@ class GameManager{
             
         switch token{
         case ACC_TOKEN :
-            // modify the accumulator
+            // modify the accumulator with frame events modifier
             accumulator += frame_modifier
-            last_operation = event_action
-            line += 1
+            // line increases by 1
+            event_index += 1
 
         case JMP_TOKEN :
-            // modify the frame
-            line += frame_modifier
-            last_operation = event_action
+            // modify the line with the frame events modifier, acc is not modified
+            event_index += frame_modifier
             
         case NOP_TOKEN :
-            no_ops += 1
-            line += 1
+            // line increases by 1, standard op
+            event_index += 1
+            
         default:
             fatalError("COULDNT DETECT \(String(describing: token)), \(String(describing: event_action))")
         }
@@ -171,12 +169,12 @@ func day8(){
     gameManager.run(lines: lines, fix:false)
     print("---Part 1 Results---")
     print("accumulator", gameManager.accumulator)
-    print("total line", gameManager.line)
+    print("total line", gameManager.event_index)
     
     // Part 2
     print("-------------Starting Part 2")
     gameManager.run(lines: lines, fix:true)
     print("---Part 2 Results---")
     print("accumulator", gameManager.accumulator)
-    print("total line", gameManager.line)
+    print("total line", gameManager.event_index)
 }
