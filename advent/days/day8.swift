@@ -11,7 +11,6 @@ let JMP_TOKEN = "jmp "
 let NOP_TOKEN = "nop "
 
 let TOKENS = [ ACC_TOKEN, JMP_TOKEN, NOP_TOKEN ]
-// what if you could pass (no op) on a the last jump operation jump and go back in time and get out of the infinite loop
 class GameManager{
     var accumulator    : Int = 0 // When this is 5, we reset the event tracker list
     var last_operation : String = "" // last valid interaction that did anything to the accum
