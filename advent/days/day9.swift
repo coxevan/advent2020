@@ -74,13 +74,14 @@ func day9(){
     print("Part 1:", invalid_number)
     
     // Part 2
+    var weakness = 0
     for (index, number) in number_array.enumerated(){
         // add each number infront until it's bigger than the invalid number
         let result_range = sum_list(number:number, number_array:number_array, index:index, target: invalid_number)
         if !result_range.isEmpty{
-            let weakness = result_range.first! + result_range.last!
-            print("Part 2:", weakness)
+            weakness = result_range.first! + result_range.last!
             break
         }
     }
+    print("Part 2:", weakness)
 }
