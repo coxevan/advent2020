@@ -43,7 +43,6 @@ func can_sum_forward_to_target(starting_index: Int, number_array: Array<Int>, ta
     // Starting at this index, can the list equal the target number
     // Returns the list of numbers, sorted that can sum to target
     
-    
     var _index = starting_index
     var calc_number = 0
     var target_range = Array<Int>()
