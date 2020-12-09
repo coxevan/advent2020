@@ -43,6 +43,7 @@ func can_sum_forward_to_target(starting_index: Int, number_array: Array<Int>, ta
     // Starting at this index, can the list equal the target number
     // Returns the list of numbers, sorted that can sum to target
     
+    
     var _index = starting_index
     var calc_number = 0
     var target_range = Array<Int>()
@@ -58,6 +59,26 @@ func can_sum_forward_to_target(starting_index: Int, number_array: Array<Int>, ta
         _index += 1
     }
     return Array<Int>()
+}
+
+func find_range_sum_to_target(number_array: Array<Int>, target: Int) ->Array<Int>{
+    var min_index = 0
+    var max_index = 1
+    var sum = number_array[min_index] + number_array[max_index]
+    
+    while sum != target{
+        if sum < target{
+            // Widen the range, include more forward
+            max_index += 1
+            sum += number_array[max_index]
+
+        }else if sum > target{
+            // Shrink the range behind us
+            sum -= number_array[min_index]
+            min_index += 1
+        }
+    }
+    return number_array[min_index...max_index].sorted()
 }
 
 func day9(){
@@ -78,13 +99,21 @@ func day9(){
     
     // Part 2
     var weakness = 0
+    let target_weakness = 3535124
+    var result_range = Array<Int>()
     for (index, _) in number_array.enumerated(){
         // determine if the list summed starting at each number will equal the target value
-        let result_range = can_sum_forward_to_target(starting_index:index, number_array:number_array, target: invalid_number)
+        result_range = can_sum_forward_to_target(starting_index:index, number_array:number_array, target: invalid_number)
         if !result_range.isEmpty{
             weakness = result_range.first! + result_range.last!
             break
         }
     }
     print("Part 2:", weakness)
+    
+    // Part 2.1
+    let _result_range = find_range_sum_to_target(number_array: number_array, target: invalid_number)
+    weakness = _result_range.first! + _result_range.last!
+    print("Part 2.1:", weakness)
+    print(target_weakness==weakness)
 }
