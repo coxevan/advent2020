@@ -9,7 +9,7 @@ import Foundation
 
 let DELTA_INT = 25 // from where we are, minus this number is how far back to look | test is 5, real is 25
 
-func get_all_numbers() -> Array<Int>{
+fileprivate func get_all_numbers() -> Array<Int>{
     guard let numbers = get_file_contents(fileName: "input_day9.txt") else{
         fatalError("Failed to read file")
     }
@@ -21,17 +21,17 @@ func get_all_numbers() -> Array<Int>{
     return number_array
 }
 
-func check_number(number: Int, number_array: Array<Int>, index: Int) -> Bool{
+func can_sum_backward_to_target(slice_index: Int, delta: Int, number_array: Array<Int>, target: Int) -> Bool{
     // Check to see if this number is valid by checking against the previous DELTA_INT values in the array, if two of them equal the value, it's valid.
     // if no two DIFFERENT values don't equal our number, it's invalid (return False)
-    let bottom_range = index - DELTA_INT
-    for i in number_array[bottom_range...index]{
-        for k in number_array[bottom_range...index]{
+    let bottom_range = slice_index - delta
+    for i in number_array[bottom_range...slice_index]{
+        for k in number_array[bottom_range...slice_index]{
             if i == k{
                 continue
             }
             let value = i + k
-            if value == number{
+            if value == target{
                 return true
             }
         }
@@ -39,13 +39,17 @@ func check_number(number: Int, number_array: Array<Int>, index: Int) -> Bool{
     return false
 }
 
-func sum_list(number: Int, number_array: Array<Int>, index: Int, target: Int) ->Array<Int>{
-    // Add all values together in the array ahead of this number until it equals our target number
-    // If our calc number goes above the target, get out
-    var _index = index
+func can_sum_forward_to_target(starting_index: Int, number_array: Array<Int>, target: Int) ->Array<Int>{
+    // Starting at this index, can the list equal the target number
+    // Returns the list of numbers, sorted that can sum to target
+    
+    
+    var _index = starting_index
     var calc_number = 0
     var target_range = Array<Int>()
     while calc_number < target{
+        // Add all values together in the array ahead of the starting index
+        // If our calc number goes above the target, get out
         let add_num = number_array[_index]
         target_range.append(add_num)
         calc_number += add_num
@@ -65,7 +69,7 @@ func day9(){
         if index < DELTA_INT{
             continue
         }
-        let valid_number = check_number(number:number, number_array:number_array, index:index)
+        let valid_number = can_sum_backward_to_target(slice_index:index, delta: DELTA_INT, number_array:number_array, target: number)
         if !valid_number{
             invalid_number = number
             break
@@ -75,9 +79,9 @@ func day9(){
     
     // Part 2
     var weakness = 0
-    for (index, number) in number_array.enumerated(){
-        // add each number infront until it's bigger than the invalid number
-        let result_range = sum_list(number:number, number_array:number_array, index:index, target: invalid_number)
+    for (index, _) in number_array.enumerated(){
+        // determine if the list summed starting at each number will equal the target value
+        let result_range = can_sum_forward_to_target(starting_index:index, number_array:number_array, target: invalid_number)
         if !result_range.isEmpty{
             weakness = result_range.first! + result_range.last!
             break
