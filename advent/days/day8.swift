@@ -162,7 +162,7 @@ class GameManager{
 
 
 func day8(){
-    let lines = get_file_contents(fileName: "input_day8.txt")!
+    let lines = get_file_contents_safe(fileName: "input_day8.txt")!
     let gameManager = GameManager()
     // Part 1
     print("-------------Starting Part 1")

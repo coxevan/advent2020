@@ -95,7 +95,7 @@ class BagRule{
 }
 
 func get_all_bag_rules() -> [BagRule]{
-    guard let rules = get_file_contents(fileName: "input_day7.txt") else{
+    guard let rules = get_file_contents_safe(fileName: "input_day7.txt") else{
         fatalError("Bad file name")
     }
     var bag_array = [BagRule]()

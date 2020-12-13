@@ -174,7 +174,7 @@ func get_passports(rawPassports: [String]) ->[Passport] {
 }
 
 func day4()->Int?{
-    guard let raw_passport_data = get_file_contents(fileName:"input_day4.txt") else { return 10 }
+    guard let raw_passport_data = get_file_contents_safe(fileName:"input_day4.txt") else { return 10 }
     let passports = get_passports(rawPassports: raw_passport_data)
     var valid_items = 0
     for passport in passports{
@@ -182,6 +182,5 @@ func day4()->Int?{
             valid_items += 1
         }
     }
-    print(valid_items)
-    //return valid_items
+    return valid_items
 }

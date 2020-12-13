@@ -54,7 +54,7 @@ class Boat{
     }
     func do_turn(right:Bool){
         // OOF, shuffle some values around. there's a better way to do this here.
-        // Probably something with multiplying across axis
+        // Probably something with multiplying across axis?
         var _new_east  : Int
         var _new_north : Int
         var _new_west  : Int
@@ -146,7 +146,7 @@ class Boat{
     }
 }
 func get_all_commands()->Array<(String, Int)>{
-    guard let command_array = get_file_contents(fileName: "input_day12.txt") else {
+    guard let command_array = get_file_contents_safe(fileName: "input_day12.txt") else {
         fatalError("woah dude: Commands couldn't be parsed")
     }
     var command_list = Array<(String, Int)>()

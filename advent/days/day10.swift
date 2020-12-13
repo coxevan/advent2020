@@ -10,7 +10,7 @@ import Foundation
 let JOLT_DELTA_LIMIT = 3
 
 func get_joltages() -> Array<Int>{
-    let file_contents = get_file_contents(fileName: "input_day10.txt")!
+    let file_contents = get_file_contents_safe(fileName: "input_day10.txt")!
     var joltage_array = Array<Int>()
     for line in file_contents{
         joltage_array.append(Int(line)!)

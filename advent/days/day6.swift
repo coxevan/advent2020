@@ -22,7 +22,6 @@ struct Group{
         }
         return filtered_answer
     }
-    
     func get_total_questions_answered() -> Int{
         let set_questions = Set(Array(get_filtered_group_answers()))
         return set_questions.count
@@ -45,7 +44,7 @@ struct Group{
 }
 
 func get_answers_by_group() -> [Group]?{
-    guard let answers = get_file_contents(fileName: "input_day6.txt") else {
+    guard let answers = get_file_contents_safe(fileName: "input_day6.txt") else {
         return nil
     }
     var groups = [Group]()

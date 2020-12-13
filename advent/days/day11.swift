@@ -161,7 +161,7 @@ func any_spot_changed(spot_array: Array<Spot>)->Bool{
 
 fileprivate func get_all_rows()->Array<String>{
     // Get the data from input file
-    guard let rows = get_file_contents(fileName: "input_day11.txt") else{
+    guard let rows = get_file_contents_safe(fileName: "input_day11.txt") else{
         fatalError("Invalid file, does it exist?")
     }
     return rows

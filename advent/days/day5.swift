@@ -43,7 +43,7 @@ func _get_int_from_id(seat_guid:String, range_char_map:Dictionary<String, String
 
 
 func day5(){
-    guard let boarding_passes = get_file_contents(fileName:"input_day5.txt") else{
+    guard let boarding_passes = get_file_contents_safe(fileName:"input_day5.txt") else{
         fatalError("Failed to read file")
     }
     

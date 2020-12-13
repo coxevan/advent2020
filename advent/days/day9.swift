@@ -10,7 +10,7 @@ import Foundation
 let DELTA_INT = 25 // from where we are, minus this number is how far back to look | test is 5, real is 25
 
 fileprivate func get_all_numbers() -> Array<Int>{
-    guard let numbers = get_file_contents(fileName: "input_day9.txt") else{
+    guard let numbers = get_file_contents_safe(fileName: "input_day9.txt") else{
         fatalError("Failed to read file")
     }
     var number_array = Array<Int>()
