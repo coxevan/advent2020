@@ -24,3 +24,19 @@ func get_string_before_character(base_string: String, character: String)->String
     }
     return value_str
 }
+
+func pad(string : String, toSize: Int) -> String {
+    // Pad with 0's until the incoming string reaches the desired size
+    var padded = string
+    for _ in 0..<(toSize - string.count) {
+        padded = "0" + padded
+        }
+    return padded
+}
+
+func int_to_binary_string(value:Int, length: Int)->String{
+    // convert an integar to a binary string with leading 0's to make it the length specified
+    // input : 2, length 4
+    // output: 0010
+    return pad(string: String(value, radix: 2), toSize: length)
+}

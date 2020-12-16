@@ -14,3 +14,10 @@ func pop_first_index(array:Array<Int>, value:Int)->Array<Int>{
     }
     return _array
 }
+func split_array_at_value(array:Array<Int>, value:Int)->Array<Int>{
+    var _array = array
+    if let index = _array.firstIndex(of: value) {
+        _array = Array(array[index..<array.count])
+    }
+    return _array
+}
