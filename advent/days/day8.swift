@@ -10,7 +10,7 @@ let ACC_TOKEN = "acc "
 let JMP_TOKEN = "jmp "
 let NOP_TOKEN = "nop "
 
-let TOKENS = [ ACC_TOKEN, JMP_TOKEN, NOP_TOKEN ]
+fileprivate let TOKENS = [ ACC_TOKEN, JMP_TOKEN, NOP_TOKEN ]
 
 class GameManager{
     var accumulator    : Int = 0

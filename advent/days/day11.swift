@@ -7,9 +7,9 @@
 
 import Foundation
 
-let FLOOR_SPOT_TOKEN = "."
-let TAKEN_SPOT_TOKEN = "#"
-let EMPTY_SPOT_TOKEN = "L"
+fileprivate let FLOOR_SPOT_TOKEN = "."
+fileprivate let TAKEN_SPOT_TOKEN = "#"
+fileprivate let EMPTY_SPOT_TOKEN = "L"
 
 let CARDINAL_DIRECTION_ARRAY = [[0,1], [0,-1], [1,0], [-1,0]]
 let DIAGONAL_DIRECTION_ARRAY = [[1,1], [-1,-1], [-1,1], [1,-1]]

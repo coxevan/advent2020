@@ -7,8 +7,8 @@
 
 import Foundation
 
-let STARTING_VALUE = 0
-var MEMORY = Dictionary<Int,Int>()
+fileprivate let STARTING_VALUE = 0
+fileprivate var MEMORY = Dictionary<Int,Int>()
 
 
 class MaskGroup{

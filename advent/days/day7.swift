@@ -7,7 +7,7 @@
 
 import Foundation
 
-let EMPTY_TOKEN = "no other bags"
+fileprivate let EMPTY_TOKEN = "no other bags"
 
 // learned the hard way about structs vs. class today.
 class BagRule{

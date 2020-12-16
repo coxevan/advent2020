@@ -15,7 +15,7 @@ let VALID_COLORS = ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"]
 let VALID_COLOR_CHARS = ["0", "1", "2", "3", "4", "5" , "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"]
 let CM_MIN_MAX = [150, 193]
 let IN_MIN_MAX = [59, 76]
-let VALID_METRICS = ["in", "cm"]
+fileprivate let VALID_METRICS = ["in", "cm"]
 
 
 struct Passport{
