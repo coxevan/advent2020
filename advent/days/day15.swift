@@ -24,7 +24,7 @@ func day15(){
     var numbers_spoken_on_turn = Array<Int>()
     var turn_map = Dictionary<Int,Array<Int>>()
     
-    while turn <= target_turn{
+    while turn <= TARGET_TURN{
         var number_spoken_on_turn = 0
         // Handle starting numbers
         let _index = turn-1
